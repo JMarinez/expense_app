@@ -1,6 +1,9 @@
+import 'package:expense_app/widgets/transactionList.dart';
 import 'package:flutter/material.dart';
 
-import './transaction.dart';
+import './models/transaction.dart';
+import './widgets/transactionItem.dart';
+import './widgets/transactionForm.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,33 +23,21 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatelessWidget {
   final String title;
-
-  final List<Transaction> transactions = [
-    Transaction(
-      id: "t1",
-      title: "New shoes",
-      amount: 599.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: "t2",
-      title: "New game",
-      amount: 2999.99,
-      date: DateTime.now(),
-    ),
-  ];
+  static int size = transactions.length;
 
   MyHomePage({this.title});
+
+  static List<Transaction> transactions = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.yellowAccent[100], //Temp
       appBar: AppBar(
         title: Text(title),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Container(
             child: Card(
@@ -55,58 +46,8 @@ class MyHomePage extends StatelessWidget {
               elevation: 5,
             ),
           ),
-          Column(
-            children: transactions.map((transaction) {
-              return Card(
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 15,
-                      ),
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.purple,
-                          width: 2,
-                        ),
-                      ),
-                      child: Text(
-                        "${transaction.amount}",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.purple,
-                        ),
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          transaction.title,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          "${transaction.date}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                elevation: 10,
-              );
-            }).toList(),
-          )
+          TransactionForm(),
+          TransactionList(),
         ],
       ),
     );
