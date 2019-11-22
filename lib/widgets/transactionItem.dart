@@ -6,7 +6,7 @@ class TransactionItem extends StatelessWidget {
   final String title;
   final double amount;
   final DateTime date;
-  final int id;
+  final String id;
 
   TransactionItem({@required this.id, @required this.title, @required this.amount, @required this.date});
 

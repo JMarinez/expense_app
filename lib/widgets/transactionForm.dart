@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-class TransactionForm extends StatefulWidget {
+class TransactionForm extends StatelessWidget {
 
-  @override
-  _TransactionFormState createState() => _TransactionFormState();
-}
+  final titleController = TextEditingController();
+  final amountController = TextEditingController();
+  final Function addTransaction;
 
-class _TransactionFormState extends State<TransactionForm> {
+  TransactionForm(this.addTransaction);
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -17,11 +18,13 @@ class _TransactionFormState extends State<TransactionForm> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             TextFormField(
+              controller: titleController,
               decoration: InputDecoration(
                 labelText: 'Title',
               ),
             ),
             TextFormField(
+              controller: amountController,
               decoration: InputDecoration(
                 labelText: 'Amount',
               ),
@@ -30,8 +33,7 @@ class _TransactionFormState extends State<TransactionForm> {
               child: Text('Add Transaction'),
               textColor: Colors.purple,
               onPressed: () {
-                setState(() {
-                });
+                addTransaction(titleController.text, (double.parse(amountController.text)));
               },
             ),
           ],
