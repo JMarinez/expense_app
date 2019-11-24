@@ -12,17 +12,16 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 400,
-      child: SingleChildScrollView(
-        child: Column(
-          children: _userTransactions.map((transaction) {
-            return TransactionItem(
-              id: transaction.id,
-              title: transaction.title,
-              amount: transaction.amount,
-              date: transaction.date,
-            );
-          }).toList(),
-        ),
+      child: ListView.builder(
+        itemBuilder: (context, index) {
+          return TransactionItem(
+            id: _userTransactions[index].id,
+            title: _userTransactions[index].title,
+            amount: _userTransactions[index].amount,
+            date: _userTransactions[index].date,
+          );
+        },
+        itemCount: _userTransactions.length,
       ),
     );
   }
