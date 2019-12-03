@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
   final Function addTransaction;
@@ -12,19 +13,36 @@ class TransactionForm extends StatefulWidget {
 class _TransactionFormState extends State<TransactionForm> {
   final formKey = GlobalKey<FormState>();
 
-  final titleController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+  DateTime _selectedDate;
 
-  final amountController = TextEditingController();
-
-  void submitData() {
+  void _submitData() {
     if (formKey.currentState.validate()) {
       widget.addTransaction(
-        titleController.text,
-        (double.parse(amountController.text)),
+        _titleController.text,
+        (double.parse(_amountController.text)),
       );
-
       Navigator.of(context).pop();
     }
+  }
+
+  void _precentDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2019),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+
+    });
   }
 
   @override
@@ -39,11 +57,11 @@ class _TransactionFormState extends State<TransactionForm> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
               TextFormField(
-                controller: titleController,
+                controller: _titleController,
                 decoration: InputDecoration(
                   labelText: 'Title',
                 ),
-                onFieldSubmitted: (_) => submitData(),
+                onFieldSubmitted: (_) => _submitData(),
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter a valid title';
@@ -52,12 +70,12 @@ class _TransactionFormState extends State<TransactionForm> {
                 },
               ),
               TextFormField(
-                controller: amountController,
+                controller: _amountController,
                 decoration: InputDecoration(
                   labelText: 'Amount',
                 ),
                 keyboardType: TextInputType.number,
-                onFieldSubmitted: (_) => submitData(),
+                onFieldSubmitted: (_) => _submitData(),
                 validator: (value) {
                   if (value.isEmpty || double.parse(value) <= 0) {
                     return 'Please enter a valid amount';
@@ -65,10 +83,32 @@ class _TransactionFormState extends State<TransactionForm> {
                   return null;
                 },
               ),
-              FlatButton(
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      _selectedDate == null
+                          ? 'No Date Chosen!'
+                          : 'Picked Date: ${DateFormat.yMd().format(_selectedDate)}',
+                    ),
+                    FlatButton(
+                      textColor: Theme.of(context).primaryColor,
+                      child: Text(
+                        'Choose Date',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: _precentDatePicker,
+                    ),
+                  ],
+                ),
+              ),
+              RaisedButton(
                 child: Text('Add Transaction'),
-                textColor: Theme.of(context).primaryColor,
-                onPressed: submitData,
+                color: Theme.of(context).primaryColor,
+                textColor: Theme.of(context).textTheme.button.color,
+                onPressed: _submitData,
               ),
             ],
           ),
