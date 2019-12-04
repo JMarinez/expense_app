@@ -19,9 +19,13 @@ class _TransactionFormState extends State<TransactionForm> {
 
   void _submitData() {
     if (formKey.currentState.validate()) {
+      final enteredTitle = _titleController.text;
+      final enteredAmount = double.parse(_amountController.text);
+
       widget.addTransaction(
         _titleController.text,
         (double.parse(_amountController.text)),
+        _selectedDate,
       );
       Navigator.of(context).pop();
     }
@@ -41,7 +45,6 @@ class _TransactionFormState extends State<TransactionForm> {
       setState(() {
         _selectedDate = pickedDate;
       });
-
     });
   }
 
@@ -86,12 +89,13 @@ class _TransactionFormState extends State<TransactionForm> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                      _selectedDate == null
-                          ? 'No Date Chosen!'
-                          : 'Picked Date: ${DateFormat.yMd().format(_selectedDate)}',
+                    Expanded(
+                      child: Text(
+                        _selectedDate == null
+                            ? 'No date chosen yet!'
+                            : 'Picked Date: ${DateFormat.yMd().format(_selectedDate)}',
+                      ),
                     ),
                     FlatButton(
                       textColor: Theme.of(context).primaryColor,
