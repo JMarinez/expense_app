@@ -19,8 +19,10 @@ class _TransactionFormState extends State<TransactionForm> {
 
   void _submitData() {
     if (formKey.currentState.validate()) {
-      final enteredTitle = _titleController.text;
-      final enteredAmount = double.parse(_amountController.text);
+
+      if(_selectedDate == null) {
+        return;
+      }
 
       widget.addTransaction(
         _titleController.text,
